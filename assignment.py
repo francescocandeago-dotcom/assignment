@@ -14,12 +14,29 @@ percorso_file = "dati.json"
 def orario():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+#validazione matricola
+def matricola_univoca(matricola):
+    #controlla se la matricola è già nel dizionario
+    return matricola not in alunni
+
+#validazione email
+def email_valida(email):
+    if "@" in email and "." in email:
+        return True
+    else:
+        return False
+
 #id per compiti
 def genera_id_compito():
     return str(len(compiti) + 1)
 
 #salvataggio dati
 def salva_dati():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                      SALVATAGGIO DATI                         ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     #creazione dizionario che contiene le variabili
     data = {"alunni": alunni, "compiti": compiti}
     #apertura file in modalità scrittura
@@ -29,6 +46,11 @@ def salva_dati():
 
 #salvataggio dati nel file
 def carica_dati():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                          CARICA DATI                          ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     #variabili globali
     global alunni, compiti
     if not os.path.exists(percorso_file):
@@ -42,16 +64,26 @@ def carica_dati():
 
 ##salvataggio dati alunno
 def inserisci_alunno():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                    INSERISCI NUOVO ALUNNO                     ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     matricola = input("Inserisci la matricola: ").strip()
     #controlla se la matricola esiste
-    if matricola in alunni:
+    if not matricola_univoca(matricola):
         print("❌ Matricola già presente")
         return
 
     #raccolta nuovi dati
     nome = input("Nome: ")
     cognome = input("Cognome: ")
-    email = input("Email: ")
+    email = input("Email: ").strip()
+
+    #validazione email
+    if not email_valida(email):
+        print("❌ Email non valida")
+        return
 
     #inserimento nuovi dati nel dizionario alunni
     alunni[matricola] = {
@@ -65,6 +97,11 @@ def inserisci_alunno():
 
 #elenco alunni registrati
 def visualizza_alunni():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                  VISUALIZZA ALUNNI REGISTRATI                 ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     #controlla se il dizionario alunni è vuoto
     if not alunni:
         print("❌ Nessun alunno registrato")
@@ -77,6 +114,11 @@ def visualizza_alunni():
 
 #modifica dati alunno
 def modifica_alunno():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                    MODIFICA DATI ALUNNO                       ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     #matricola da modificare
     matricola = input("Matricola da modificare: ").strip()
     #controlla se la matricola esiste
@@ -86,7 +128,14 @@ def modifica_alunno():
 
     nome = input("Nuovo nome (invio per saltare): ")
     cognome = input("Nuovo cognome (invio per saltare): ")
-    email = input("Nuova email (invio per saltare): ")
+    email = input("Nuova email (invio per saltare): ").strip()
+
+    #validazione email
+    if email:
+        if not email_valida(email):
+            print("❌ Email non valida")
+            return
+        alunni[matricola]["email"] = email
 
     #aggiorna i dati
     if nome:
@@ -102,6 +151,11 @@ def modifica_alunno():
 
 #eliminare alunno
 def elimina_alunno():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                        ELIMINA ALUNNO                         ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     matricola = input("Matricola da eliminare: ").strip()
     #controlla se la matricola esiste
     if matricola not in alunni:
@@ -113,6 +167,11 @@ def elimina_alunno():
 
 #assegnazione compito ad alunno
 def assegna_compito():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                    ASSEGNA COMPITO A STUDENTE                 ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     matricola = input("Matricola studente: ").strip()
     if matricola not in alunni:
         print("❌ Studente non trovato")
@@ -134,6 +193,11 @@ def assegna_compito():
 
 #inserire un voto
 def registra_valutazione():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                    REGISTRA VALUTAZIONE                       ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     #richiede l'ID del compito
     id_compito = input("ID compito: ").strip()
     if id_compito not in compiti:
@@ -149,6 +213,11 @@ def registra_valutazione():
 
 #visualizzazione compiti di uno studente
 def visualizza_compiti_studente():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║               VISUALIZZA COMPITI DI UNO STUDENTE              ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     matricola = input("Matricola studente: ").strip()
     print(" Compiti dello studente:")
 
@@ -159,6 +228,11 @@ def visualizza_compiti_studente():
 
 #statistiche
 def statistiche_studente():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                  VISUALIZZA STATISTICHE ALUNNO                ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     matricola = input("Matricola: ").strip()
 
     voti = []
@@ -195,6 +269,11 @@ def statistiche_studente():
 
 #ranking studenti
 def ranking_studenti():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                 RANKING ALUNNI PER MEDIA VOTI                 ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     ranking = {}
 
     for matricola in alunni:
@@ -218,10 +297,82 @@ def ranking_studenti():
 
 #compiti non completati
 def report_compiti_non_completati():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                REPORT COMPITI NON COMPLETATI                  ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
     print("❌ Compiti non completati:")
     for cid, compito in compiti.items():
         if compito["stato"] != "registrato":
             print(f" - ID {cid}: {compito['descrizione']} (studente {compito['matricola']})")
+
+#cercare alunni per nome,cognome e matricola
+def ricerca_alunno():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                        RICERCA ALUNNO                         ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
+
+    chiave = input("Inserisci matricola, nome o cognome: ").strip().lower()
+    trovato = False
+
+    if not alunni:
+        print("❌ Nessun alunno presente nel sistema")
+        return
+
+    print("Risultati ricerca:")
+
+    #ricerca i dati prima inseriti nel dizionario
+    for matricola, dati in alunni.items():
+        nome = dati.get("nome", "").lower()
+        cognome = dati.get("cognome", "").lower()
+        matricola_lower = matricola.lower()
+
+        #se li trova li stampa
+        if chiave == matricola_lower or chiave == nome or chiave == cognome:
+            print(f" - {matricola}: {dati.get('nome', '')} {dati.get('cognome', '')} ({dati.get('email', '')})")
+            trovato = True
+
+    if not trovato:
+        print("❌ Nessun alunno trovato")
+
+#visualizza gli alunni per i loro voti
+def filtra_alunni_per_voto():
+    print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                   VISUALIZZA ALUNNI PER VOTO                  ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+    )
+    
+    try:
+        voto_min = float(input("Voto minimo: "))
+        voto_max = float(input("Voto massimo: "))
+    except ValueError:
+        print("❌ Inserire numeri validi")
+        return
+
+    print(f"\n📊 Alunni con media voti tra {voto_min} e {voto_max}:")
+
+    trovato = False
+    for matricola, dati in alunni.items():
+
+        # calcola media voti
+        voti = [c["voto"] for c in compiti.values()
+                if c["matricola"] == matricola and c["voto"] is not None]
+
+        #se non ci sono voti
+        if not voti:
+            continue  
+
+        media = sum(voti) / len(voti)
+        if voto_min <= media <= voto_max:
+            print(f" - {matricola}: {dati['nome']} {dati['cognome']} | Media: {media:.2f}")
+            trovato = True
+
+    if not trovato:
+        print("❌ Nessun alunno trovato in questo range")
 
 #menu
 def stampa_menu():
@@ -246,6 +397,8 @@ def stampa_menu():
     "║   l) Carica dati                                              ║\n"
     "║   m) Visualizza menu                                          ║\n"
     "║   n) Esci                                                     ║\n"
+    "║   o) Ricerca alunno                                           ║\n"
+    "║   p) Filtra alunni per range di voti                          ║\n"
     "╚═══════════════════════════════════════════════════════════════╝\n"
     )
 
@@ -266,9 +419,15 @@ def main():
         elif scelta == "k": salva_dati()
         elif scelta == "l": carica_dati()
         elif scelta == "m": stampa_menu()
+        elif scelta == "o": ricerca_alunno()
+        elif scelta == "p": filtra_alunni_per_voto()
         #esce dal programma
         elif scelta == "n":
-            print(" Uscita dal programma")
+            print(
+    "╔═══════════════════════════════════════════════════════════════╗\n"
+    "║                    USCITA DAL PROGRAMMA                       ║\n"
+    "╚═══════════════════════════════════════════════════════════════╝\n"
+            )
             break
         else:
             print("❌ Opzione non valida")
